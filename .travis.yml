@@ -1,0 +1,19 @@
+language: go
+go:
+  - '1.9' 
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y rpm
+
+install:
+  - "go get -d -v ./..."
+  - "go get -u github.com/smartystreets/goconvey"
+  - "go install ./..."
+
+deploy:
+  - provider: script
+    script: curl -sL https://git.io/goreleaser | bash
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = linux

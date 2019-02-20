@@ -5,13 +5,14 @@ import (
 	"runtime/debug"
 
 	flow "omi-gitlab.e-technik.uni-ulm.de/bwnetflow/bwnetflow_api/go"
+	ff "omi-gitlab.e-technik.uni-ulm.de/bwnetflow/kafka/kafkaconnector/flowfilter"
 )
 
-var flowFilter *flowFilter.FlowFilter
+var flowFilter *ff.FlowFilter
 
 func runKafkaListener() {
 	// initialize filters: prepare filter arrays
-	flowFilter = flowFilter.NewFlowFilter(*filterCustomerIDs, *filterIPsv4, *filterIPsv6, *filterPeers)
+	flowFilter = ff.NewFlowFilter(*filterCustomerIDs, *filterIPsv4, *filterIPsv6, *filterPeers)
 
 	// handle kafka flow messages in foreground
 	for {

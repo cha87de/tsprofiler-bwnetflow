@@ -2,6 +2,9 @@ language: go
 go:
   - '1.9' 
 
+services:
+  - docker
+
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y rpm
@@ -10,8 +13,17 @@ install:
   - "go get -d -v ./..."
   - "go get -u github.com/smartystreets/goconvey"
   - "go install ./..."
+  - "cp $GOPATH/bin/tsprofiler-bwnetflow ."
+
+before_deploy:
+ - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 deploy:
+  - provider: script
+    skip_cleanup: true
+    script: docker build -t cha87de/tsprofiler-bwnetflow:master . ; docker push cha87de/tsprofiler-bwnetflow:master 
+    on:
+      branch: master
   - provider: script
     script: curl -sL https://git.io/goreleaser | bash
     on:
